@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Task Manager</h1>
+    <form id="addTaskForm">
+        <input type="text" id="taskName" name="taskName" placeholder="Enter a new task here" required>
+        <button type="submit" class="add-button">Add Task</button>
+    </form>
+    <section id="taskList">
+        <h2>Tasks</h2>
+        <ul id="tasks">
+        </ul>
+    </section>
+</div>
+<script src="coreHTTP.js"></script>
+<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+<!--Using Socket.io/WebSocket to have server update continuously-->
+<script src="script.js"></script>
+</body>
+</html>

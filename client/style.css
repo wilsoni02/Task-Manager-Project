@@ -1,0 +1,109 @@
+/* General styles */
+body {
+    background-color: #f4f7f6;
+    color: #5d5d5d;
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+.container {
+    width: 90%;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 1em;
+    text-align: center;
+}
+
+/* Task styles */
+ul#tasks {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+li.task-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+    justify-content: space-between;
+}
+
+li.task-item:last-child {
+    border-bottom: none;
+}
+
+.task-name {
+    flex-grow: 1;
+    padding-right: 1em;
+}
+
+/* Button styles */
+button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button.edit-button,
+button.delete-button {
+    background-color: #f0f0f0;
+    color: #333;
+    margin-left: 5px;
+}
+
+button.edit-button:hover,
+button.delete-button:hover {
+    background-color: #e0e0e0;
+}
+
+button.add-button {
+    background-color: #5cb85c;
+    color: white;
+    font-size: 1em;
+    font-weight: bold;
+    margin-top: 10px;
+    width: 100%;
+}
+
+button.add-button:hover {
+    background-color: #4cae4c;
+}
+
+/* Input styles */
+input[type="text"],
+input[type="submit"],
+input.task-edit-input {
+    width: 100%;
+    padding: 8px;
+    margin: 6px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Form styles */
+form#addTaskForm {
+    margin-bottom: 2em;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        width: 100%;
+    }
+}
