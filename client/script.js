@@ -1,3 +1,6 @@
+// Created by: Ian Wilson
+// Date; November 16th, 2023
+
 const http = new CoreHTTP();
 const baseURL = 'http://localhost:4000';
 const socket = io(baseURL);

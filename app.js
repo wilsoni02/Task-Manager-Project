@@ -1,3 +1,6 @@
+// Created by: Ian Wilson
+// Date; November 16th, 2023
+
 const express = require('express');
 const http = require('http');
 const { Server } = require("socket.io");

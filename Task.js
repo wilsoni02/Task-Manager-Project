@@ -1,3 +1,6 @@
+// Created by: Ian Wilson
+// Date; November 16th, 2023
+
 const mongoose = require("mongoose");
 
 const TaskSchema = new mongoose.Schema({
@@ -11,7 +14,6 @@ const TaskSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   }
-  // Include other fields if needed based on your project requirements
 }, { timestamps: true }); // Add timestamps to each task
 
 module.exports = mongoose.model("Task", TaskSchema);

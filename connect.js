@@ -1,3 +1,6 @@
+// Created by: Ian Wilson
+// Date; November 16th, 2023
+
 require('dotenv').config(); // Add this line
 const mongoose = require("mongoose");
 const connectionString = process.env.MONGODB_URI || "mongodb+srv://Team9:1234@cluster0.glhvt.mongodb.net/TM-T9?retryWrites=true&w=majority";
