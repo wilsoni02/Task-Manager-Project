@@ -93,7 +93,12 @@ function addTaskToList(task) {
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = 'Delete';
         deleteBtn.className = 'delete-button';
-        deleteBtn.onclick = function () { deleteTask(task._id); };
+        deleteBtn.onclick = function () {
+            const confirmed = confirm("Are you sure you want to delete this?");
+            if (confirmed) {
+                deleteTask(task._id);
+            }
+        };
 
         const doneBtn = document.createElement('button');
         doneBtn.textContent = 'Done';
@@ -103,6 +108,8 @@ function addTaskToList(task) {
             if (success) {
                 taskNameSpan.classList.add('task-completed');
             }
+            taskNameSpan.classList.add('animate-done');
+            setTimeout(() => taskNameSpan.classList.remove('animate-done'), 1000);
         };
 
         listItem.appendChild(doneBtn);

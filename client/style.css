@@ -3,12 +3,46 @@
 
 
 /* General styles */
+@keyframes colorTransition {
+    0%, 100% {
+        background-color: white;
+    }
+    50% {
+        background-color: maroon;
+    }
+}
+
+:root {
+    --primary-color: maroon;
+    --secondary-color: white;
+    --text-color: #333;
+    --background-color: #f4f7f6;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
 body {
-    background-color: #f4f7f6;
-    color: #5d5d5d;
     font-size: 16px;
     line-height: 1.6;
     padding: 20px;
+    animation: colorTransition 30s ease-in-out infinite;
+}
+
+@keyframes colorTransition {
+    0%, 100% {
+        background-color: white;
+    }
+    50% {
+        background-color: maroon;
+    }
 }
 
 .container {
@@ -34,60 +68,130 @@ ul#tasks {
     padding: 0;
 }
 
+.task-name {
+    flex-grow: 1;
+    margin-right: 10px;
+    text-align: center;
+    transition: color 0.5s ease;
+    padding-right: 1em;
+}
+
+
 li.task-item {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #eee;
-    padding: 10px 0;
     justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+    margin: 10px 0;
+    border-radius: 5px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+li.task-item:hover {
+    transform: scale(1.05);
+    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.task-completed {
+    text-decoration: line-through;
+    color: green;
 }
 
 li.task-item:last-child {
     border-bottom: none;
 }
 
-.task-name {
-    flex-grow: 1;
-    padding-right: 1em;
-}
-
-.task-completed {
-    text-decoration: line-through;
-    color: #808080;
-}
-
 /* Button styles */
-button {
+.button-common {
     padding: 6px 12px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    margin-left: 10px;
 }
 
-button.edit-button,
-button.delete-button {
-    background-color: #f0f0f0;
-    color: #333;
-    margin-left: 5px;
+.button-common:hover, .edit-button:hover, .delete-button:hover, .done-button:hover, .add-button:hover {
+    animation: pulse 1s infinite;
 }
 
-button.edit-button:hover,
-button.delete-button:hover {
-    background-color: #e0e0e0;
+.edit-button, .delete-button, .done-button {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    border: none;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    box-shadow: 0 6px #666;
+    transform: translateY(-2px);
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+    20%, 40%, 60%, 80% { transform: translateX(10px); }
+}
+
+
+.animate-done {
+    animation: scaleUp 1s forwards;
+}
+
+@keyframes scaleUp {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.add-button {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    box-shadow: 0 4px #999;
+}
+
+.add-button:active {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    box-shadow: 0 2px #666;
+    transform: translateY(4px);
 }
 
 button.add-button {
-    background-color: #5cb85c;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
     font-size: 1em;
     font-weight: bold;
     margin-top: 10px;
     width: 100%;
 }
 
-button.add-button:hover {
-    background-color: #4cae4c;
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 /* Input styles */
@@ -106,13 +210,3 @@ form#addTaskForm {
     margin-bottom: 2em;
 }
 
-/* Responsive styles */
-@media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-
-    .container {
-        width: 100%;
-    }
-}
