@@ -1,5 +1,6 @@
 /*Created by: Ian Wilson*/
-/*Date; November 16th, 2023*/
+/*Date: November 16th, 2023*/
+
 
 /* General styles */
 body {
@@ -48,6 +49,11 @@ li.task-item:last-child {
 .task-name {
     flex-grow: 1;
     padding-right: 1em;
+}
+
+.task-completed {
+    text-decoration: line-through;
+    color: #808080;
 }
 
 /* Button styles */

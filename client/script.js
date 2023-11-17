@@ -1,5 +1,5 @@
 // Created by: Ian Wilson
-// Date; November 16th, 2023
+// Date: November 16th, 2023
 
 const http = new CoreHTTP();
 const baseURL = 'http://localhost:4000';
@@ -9,6 +9,13 @@ socket.on('tasks', (tasks) => {
     const tasksList = document.getElementById('tasks');
     tasksList.innerHTML = ''; // Clear the list
     tasks.forEach(addTaskToList); // Add all tasks to the list
+});
+
+socket.on('updateTask', (updatedTask) => {
+    // Find the task in the DOM and update its content
+    const taskElement = document.querySelector(`[data-task-id="${updatedTask._id}"]`);
+    if (taskElement) {
+    }
 });
 
 function initializeAddTaskForm() {
@@ -47,7 +54,6 @@ function initializeAddTaskForm() {
     }
 }
 
-
 // Function to load tasks on page load
 async function loadTasks() {
     const tasksList = document.getElementById('tasks');
@@ -75,15 +81,31 @@ function addTaskToList(task) {
         taskNameSpan.textContent = task.name;
         taskNameSpan.className = 'task-name';
 
+        if (task.completed) {
+            taskNameSpan.classList.add('task-completed');
+        }
+
         const editBtn = document.createElement('button');
         editBtn.textContent = 'Edit';
         editBtn.className = 'edit-button';
-        editBtn.onclick = function () { editTask(task._id, taskNameSpan); };
+        editBtn.onclick = function () { editTask(task._id, taskNameSpan, task.completed); };
 
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = 'Delete';
         deleteBtn.className = 'delete-button';
         deleteBtn.onclick = function () { deleteTask(task._id); };
+
+        const doneBtn = document.createElement('button');
+        doneBtn.textContent = 'Done';
+        doneBtn.className = 'done-button';
+        doneBtn.onclick = async function () {
+            const success = await markTaskAsDone(task._id, taskNameSpan);
+            if (success) {
+                taskNameSpan.classList.add('task-completed');
+            }
+        };
+
+        listItem.appendChild(doneBtn);
 
         listItem.appendChild(taskNameSpan);
         listItem.appendChild(editBtn);
@@ -105,60 +127,81 @@ async function deleteTask(taskId) {
     }
 }
 
-
-function editTask(taskId, taskNameSpan) {
-    let isEnterPressed = false; // Flag to check if enter key was pressed
-
+function editTask(taskId, taskNameSpan, isCompleted) {
+    let isEnterPressed = false;
     const editInput = document.createElement('input');
     editInput.type = 'text';
     editInput.value = taskNameSpan.textContent;
     editInput.className = 'task-edit-input';
 
-    // Remove existing event listeners if they exist
-    editInput.onkeypress = null;
-    editInput.onblur = null;
-
-    // Define the event handlers
-    function handleKeypress(e) {
-        if (e.key === 'Enter') {
-            isEnterPressed = true; // Set the flag to true
-            saveTask(taskId, editInput.value);
-            taskNameSpan.textContent = editInput.value;
-            editInput.parentNode.replaceChild(taskNameSpan, editInput);
-        }
-    }
-
-    function handleBlur() {
-        if (!isEnterPressed) { // Only if enter was not pressed
-            saveTask(taskId, editInput.value);
-            taskNameSpan.textContent = editInput.value;
-            editInput.parentNode.replaceChild(taskNameSpan, editInput);
-        }
-    }
-
-    // Add the event listeners
-    editInput.addEventListener('keypress', handleKeypress);
-    editInput.addEventListener('blur', handleBlur);
-
+    // Replace the span with the input
     taskNameSpan.parentNode.replaceChild(editInput, taskNameSpan);
     editInput.focus();
     editInput.select();
+
+    editInput.addEventListener('blur', async function() {
+        if (!isEnterPressed) {
+            const success = await saveTask(taskId, editInput.value.trim());
+            if (success) {
+                taskNameSpan.textContent = editInput.value.trim();
+                taskNameSpan.classList.toggle('task-completed', isCompleted);
+            }
+            // Check if the parent exists before replacing
+            if(editInput.parentNode) {
+                editInput.parentNode.replaceChild(taskNameSpan, editInput);
+            }
+        }
+    });
+
+    editInput.addEventListener('keypress', async function(e) {
+        if (e.key === 'Enter') {
+            isEnterPressed = true;
+            const success = await saveTask(taskId, editInput.value.trim());
+            if (success) {
+                taskNameSpan.textContent = editInput.value.trim();
+                taskNameSpan.classList.toggle('task-completed', isCompleted);
+            }
+            // Check if the parent exists before replacing
+            if(editInput.parentNode) {
+                editInput.parentNode.replaceChild(taskNameSpan, editInput);
+            }
+        }
+    });
 }
 
 
-
-async function saveTask(taskId, newName) {
+async function markTaskAsDone(taskId, taskNameSpan) {
     try {
-        const response = await http.put(`${baseURL}/api/tasks/${taskId}`, { name: newName });
+        const response = await http.put(`${baseURL}/api/tasks/${taskId}`, { completed: true });
         if (response.message.includes('successful')) {
-            socket.emit('editTask');
+            taskNameSpan.classList.add('task-completed');
+            return true; // Indicate success
         } else {
-            console.error('Failed to update task', response);
+            console.error('Failed to mark task as done', response);
+            return false; // Indicate failure
         }
     } catch (error) {
         console.error('Error:', error);
+        return false; // Indicate failure
     }
 }
+
+async function saveTask(taskId, newName) {
+    try {
+        const response = await http.patch(`${baseURL}/api/tasks/${taskId}`, { name: newName });
+        if (response.message.includes('successful')) {
+            socket.emit('editTask');
+            return true; // Indicate success
+        } else {
+            console.error('Failed to update task', response);
+            return false; // Indicate failure
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        return false; // Indicate failure
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', function() {
     initializeAddTaskForm();

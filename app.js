@@ -1,5 +1,5 @@
 // Created by: Ian Wilson
-// Date; November 16th, 2023
+// Date: November 16th, 2023
 
 const express = require('express');
 const http = require('http');
@@ -10,11 +10,10 @@ const cors = require('cors');
 
 const corsOptions = {
   origin: "http://localhost:63342",
-  methods: ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
+  methods: ["GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type"],
   credentials: true,
 };
-
 
 const app = express();
 const server = http.createServer(app);
@@ -74,11 +73,23 @@ app.delete('/api/tasks/:id', async (req, res) => {
 // PUT route to update a task by ID
 app.put('/api/tasks/:id', async (req, res) => {
   try {
-    const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const task = await Task.findByIdAndUpdate(req.params.id, {completed: req.body.completed}, { new: true });
     if (!task) {
       return res.status(404).json({ msg: "Task not found" });
     }
     io.emit('tasks', await Task.find()); // Emit the updated tasks
+    res.status(200).json({ task });
+  } catch (error) {
+    res.status(500).json({ msg: "Error updating task" });
+  }
+});
+
+app.patch('/api/tasks/:id', async (req, res) => {
+  try {
+    const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!task) {
+      return res.status(404).json({ msg: "Task not found" });
+    }
     res.status(200).json({ task });
   } catch (error) {
     res.status(500).json({ msg: "Error updating task" });
